@@ -1,0 +1,6 @@
+@Unpublished{econ_spec_jel2025,
+    Title  = {A project to understand the specialization trends in economics research using JEL codes.},
+    Author = {Felix Schmitz},
+    Year   = {2025},
+    Url    = {https://github.com/felixschmitz/econ_spec_jel}
+}

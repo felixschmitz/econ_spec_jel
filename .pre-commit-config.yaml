@@ -1,0 +1,70 @@
+ci:
+    skip: [typing]
+
+repos:
+-   repo: https://github.com/pre-commit/pre-commit-hooks
+    rev: v5.0.0
+    hooks:
+    -   id: check-added-large-files
+        args: ['--maxkb=25']
+    -   id: check-case-conflict
+    -   id: check-merge-conflict
+    -   id: check-vcs-permalinks
+    -   id: check-yaml
+    -   id: debug-statements
+    -   id: end-of-file-fixer
+    -   id: fix-byte-order-marker
+    -   id: mixed-line-ending
+    -   id: no-commit-to-branch
+        args: [--branch, main]
+    -   id: trailing-whitespace
+-   repo: https://github.com/pre-commit/pygrep-hooks
+    rev: v1.10.0
+    hooks:
+    -   id: python-check-blanket-noqa
+    -   id: python-check-mock-methods
+    -   id: python-no-eval
+    -   id: python-no-log-warn
+    -   id: python-use-type-annotations
+    -   id: text-unicode-replacement-char
+-   repo: https://github.com/charliermarsh/ruff-pre-commit
+    rev: v0.8.4
+    hooks:
+      - id: ruff
+      - id: ruff-format
+-   repo: https://github.com/executablebooks/mdformat
+    rev: 0.7.21
+    hooks:
+    -   id: mdformat
+        additional_dependencies: [
+            mdformat-gfm,
+            mdformat-ruff,
+        ]
+        args: [--wrap, "88"]
+        files: (README\.md)
+-   repo: https://github.com/executablebooks/mdformat
+    rev: 0.7.21
+    hooks:
+    -   id: mdformat
+        additional_dependencies: [
+            mdformat-myst,
+            mdformat-ruff,
+        ]
+        args: [--wrap, "88"]
+        files: (docs/.)
+-   repo: https://github.com/crate-ci/typos
+    rev: v1.28.4
+    hooks:
+      - id: typos
+-   repo: meta
+    hooks:
+    -   id: check-hooks-apply
+    -   id: check-useless-excludes
+    # -   id: identity  # Prints all files passed to pre-commits. Debugging.
+-   repo: local
+    hooks:
+    -   id: typing
+        name: typing
+        language: system
+        entry: pixi run typing
+        pass_filenames: false

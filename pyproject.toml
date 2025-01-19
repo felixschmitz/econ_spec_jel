@@ -1,0 +1,134 @@
+[build-system]
+requires = ["hatchling"]
+build-backend = "hatchling.build"
+
+[project]
+name = "econ_spec_jel"
+version = "0.1.0"
+description = "A project to understand the specialization trends in economics research using JEL codes."
+requires-python = ">=3.9"
+classifiers = [
+  "Intended Audience :: Science/Research",
+  "License :: OSI Approved :: MIT License",
+  "Operating System :: MacOS :: MacOS X",
+  "Operating System :: Microsoft :: Windows",
+  "Operating System :: POSIX",
+  "Programming Language :: Python :: 3",
+  "Programming Language :: Python :: 3 :: Only",
+]
+
+[project.readme]
+file = "README.md"
+content-type = "text/markdown"
+
+[project.license]
+text = "MIT"
+
+[[project.authors]]
+name = "Felix Schmitz"
+email = "s87fschm@uni-bonn.de"
+
+[project.urls]
+Changelog = "https://github.com/felixschmitz/econ_spec_jel"
+Documentation = "https://github.com/felixschmitz/econ_spec_jel"
+Github = "https://github.com/felixschmitz/econ_spec_jel"
+Tracker = "https://github.com/felixschmitz/econ_spec_jel/issues"
+
+[tool.pixi.project]
+channels = ["conda-forge"]
+platforms = ["win-64", "linux-64", "osx-64", "osx-arm64"]
+
+[tool.pixi.tasks]
+
+[tool.pixi.dependencies]
+pytask = ">=0.5.0"
+
+[tool.pixi.pypi-dependencies]
+"econ_spec_jel" = { path = ".", editable = true }
+
+[tool.pixi.feature.docs.tasks]
+docs = "sphinx-build -b html docs/source docs/build"
+
+[tool.pixi.feature.docs.dependencies]
+furo = "*"
+ipython = "*"
+myst-parser = "*"
+nbsphinx = "*"
+sphinx = "*"
+sphinx-copybutton = "*"
+sphinx-design = ">=0.3"
+sphinx-toolbox = "*"
+sphinxext-opengraph = "*"
+
+[tool.pixi.feature.test.tasks]
+test = "pytest --cov src --cov tests"
+
+[tool.pixi.feature.test.dependencies]
+pytest = "*"
+pytest-cov = "*"
+pytest-xdist = "*"
+
+[tool.pixi.feature.typing.tasks]
+typing = "mypy"
+
+[tool.pixi.feature.typing.dependencies]
+mypy = "*"
+
+[tool.pixi.feature.dev.tasks]
+nb = "jupyter lab --no-browser"
+
+[tool.pixi.feature.dev.dependencies]
+jupyterlab = "*"
+# pixi-pycharm = "*"
+
+[tool.pixi.environments]
+default = { features = ["dev", "docs", "test"], solve-group = "default" }
+docs = { features = ["docs"], solve-group = "default" }
+repro = { features = [], solve-group = "default" }
+typing = { features = ["typing"], solve-group = "default" }
+
+[tool.mypy]
+files = ["src", "tests"]
+check_untyped_defs = true
+disallow_any_generics = true
+disallow_incomplete_defs = true
+disallow_untyped_defs = true
+no_implicit_optional = true
+warn_redundant_casts = true
+warn_unused_ignores = true
+ignore_missing_imports = true
+
+[[tool.mypy.overrides]]
+module = "tests.*"
+ignore_errors = true
+disallow_untyped_defs = false
+
+[tool.pytask.ini_options]
+paths = ["src/econ_spec_jel"]
+
+[tool.ruff]
+target-version = "py311"
+fix = true
+unsafe-fixes = true
+
+[tool.ruff.lint]
+extend-ignore = [
+  "COM812", # Comply with ruff-format.
+  "ISC001", # Comply with ruff-format.
+]
+select = ["ALL"]
+
+[tool.ruff.lint.per-file-ignores]
+"tests/*" = ["D", "ANN", "S101"]
+"docs/source/conf.py" = ["INP001"]
+
+[tool.ruff.lint.isort]
+force-single-line = true
+
+[tool.ruff.lint.pydocstyle]
+convention = "numpy"
+
+[tool.pytest.ini_options]
+addopts = ["--doctest-modules"]
+testpaths = ["src", "tests"]
+norecursedirs = [".idea", ".tox"]
