@@ -153,3 +153,4 @@ dist
 _version.py
 bld
 data
+.pixi
