@@ -7,7 +7,6 @@ documentation: https://www.sphinx-doc.org/en/master/usage/configuration.html
 
 from importlib.metadata import version
 
-
 # -- Project information -----------------------------------------------------
 
 project = "Specialization Trends in Economics Research using JEL Codes"
