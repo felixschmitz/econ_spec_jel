@@ -156,3 +156,4 @@ data
 .pixi
 
 *.pdf
+.DS_Store
