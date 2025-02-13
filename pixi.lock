@@ -4810,7 +4810,7 @@ packages:
   name: econ-spec-jel
   version: 0.1.0
   path: .
-  sha256: c8eb9dd9f3bff9c1b7d2e787e644891406926ef20b73b1eba764b1602fb8156f
+  sha256: 2ada85740d0f697eba1f548a4d00fcd66c3d57336287c6e21b340497c5f68b11
   requires_dist:
   - pdbp>=1.6.1,<2
   requires_python: '>=3.9'
