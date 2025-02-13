@@ -47,6 +47,8 @@ pandas = ">=2.2.3,<3"
 python = "3.10.*"
 pathlib = ">=1.0.1,<2"
 pytask = ">=0.5.2,<0.6"
+pygraphviz = ">=1.14,<2"
+pytask-parallel = ">=0.5.0,<0.6"
 
 [tool.pixi.pypi-dependencies]
 "econ_spec_jel" = { path = ".", editable = true }
@@ -113,6 +115,8 @@ paths = ["./src/econ_spec_jel", "./documents"]
 pdbcls = "pdbp:Pdb"
 editor_url_scheme = "vscode"
 task_files = ["task_*.py", "task.py", "tasks.py"]
+parallel_backend = "loky"
+n_workers = 9
 
 [tool.ruff]
 target-version = "py311"
