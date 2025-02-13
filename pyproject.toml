@@ -49,6 +49,7 @@ pathlib = ">=1.0.1,<2"
 pytask = ">=0.5.2,<0.6"
 pygraphviz = ">=1.14,<2"
 pytask-parallel = ">=0.5.0,<0.6"
+types-requests = ">=2.32.0.20241016,<3"
 
 [tool.pixi.pypi-dependencies]
 "econ_spec_jel" = { path = ".", editable = true }
@@ -133,6 +134,7 @@ select = ["ALL"]
 [tool.ruff.lint.per-file-ignores]
 "tests/*" = ["D", "ANN", "S101"]
 "docs/source/conf.py" = ["INP001"]
+"src/econ_spec_jel/data_scraping/task.py" = ["PLR2004"]
 
 [tool.ruff.lint.isort]
 force-single-line = true

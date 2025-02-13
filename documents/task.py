@@ -1,11 +1,14 @@
 """Tasks for compiling the paper and presentation(s)."""
 
 import shutil
+from pathlib import Path
 
 import pytask
 from pytask_latex import compilation_steps as cs
 
-from econ_spec_jel.config import BLD, DOCUMENTS, ROOT
+from econ_spec_jel.config import BLD
+from econ_spec_jel.config import DOCUMENTS
+from econ_spec_jel.config import ROOT
 
 documents = ["paper", "presentation"]
 
@@ -19,7 +22,7 @@ for document in documents:
         ),
     )
     @pytask.task(id=document)
-    def task_compile_document():
+    def task_compile_document() -> None:
         """Compile the document specified in the latex decorator."""
 
     kwargs = {
@@ -28,6 +31,6 @@ for document in documents:
     }
 
     @pytask.task(id=document, kwargs=kwargs)
-    def task_copy_to_root(depends_on, produces):
+    def task_copy_to_root(depends_on: Path, produces: Path) -> None:
         """Copy a document to the root directory for easier retrieval."""
         shutil.copy(depends_on, produces)
