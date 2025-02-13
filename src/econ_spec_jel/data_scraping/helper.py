@@ -23,6 +23,7 @@ def extract_metadata(response: requests.Response, dp_number: int) -> dict[str, A
     pub_date = soup.select_one("div.publications-header p").text.strip()
     pub_month, pub_year = pub_date.split(" ")
     authors_information = soup.select("div.authors a")
+    published = soup.select_one("div.publications-header p").text.strip()
     author_names = [a.text.strip() for a in authors_information]
     author_urls = [a["href"] for a in authors_information]
     abstract = soup.select_one("div.element-copyexpandable p").text.strip()
@@ -47,6 +48,7 @@ def extract_metadata(response: requests.Response, dp_number: int) -> dict[str, A
         "title": title,
         "author_names": author_names,
         "author_urls": author_urls,
+        "published": published,
         "publication_date_month": pub_month,
         "publication_date_year": pub_year,
         "abstract": abstract,

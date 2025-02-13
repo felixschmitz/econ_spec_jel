@@ -23,6 +23,7 @@ def _scrape_metadata(base_url: str, dp_number: int) -> dict[str, Any]:
                 "title",
                 "author_names",
                 "author_urls",
+                "published",
                 "publication_date_month",
                 "publication_date_year",
                 "abstract",
