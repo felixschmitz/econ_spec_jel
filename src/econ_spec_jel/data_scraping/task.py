@@ -3,14 +3,32 @@
 from pathlib import Path
 from typing import Annotated
 from typing import Any
+from typing import NamedTuple
 
 import requests
 from pytask import task
 
 from econ_spec_jel.config import DATACATALOGS
-from econ_spec_jel.config import SCRAPERS
-from econ_spec_jel.config import Scraper
+from econ_spec_jel.config import MAX_DP_NUMBER
 from econ_spec_jel.data_scraping.helper import extract_metadata
+
+
+class Scraper(NamedTuple):
+    """NamedTuple to store the base urls and the dp number of a discussion paper."""
+
+    metadata_base_url: str
+    file_base_url: str
+    dp_number: int
+
+
+SCRAPERS = [
+    Scraper(
+        metadata_base_url="https://www.iza.org/publications/dp/",
+        file_base_url="https://docs.iza.org/dp",
+        dp_number=num,
+    )
+    for num in range(1, MAX_DP_NUMBER + 1)
+]
 
 for scraper in SCRAPERS:
     if not DATACATALOGS["metadata"][str(scraper.dp_number)].path.is_file():

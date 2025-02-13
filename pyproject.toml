@@ -128,6 +128,7 @@ unsafe-fixes = true
 extend-ignore = [
   "COM812", # Comply with ruff-format.
   "ISC001", # Comply with ruff-format.
+  "I002", # Allow multiple imports on one line
 ]
 select = ["ALL"]
 

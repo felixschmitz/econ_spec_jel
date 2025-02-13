@@ -1,70 +1,80 @@
-ci:
-    skip: [typing]
-
+---
 repos:
--   repo: https://github.com/pre-commit/pre-commit-hooks
-    rev: v5.0.0
+  - repo: meta
     hooks:
-    -   id: check-added-large-files
-        args: ['--maxkb=25']
-    -   id: check-case-conflict
-    -   id: check-merge-conflict
-    -   id: check-vcs-permalinks
-    -   id: check-yaml
-    -   id: debug-statements
-    -   id: end-of-file-fixer
-    -   id: fix-byte-order-marker
-    -   id: mixed-line-ending
-    -   id: no-commit-to-branch
+      - id: check-useless-excludes
+      # - id: check-hooks-apply  # Leave mdformat and nbstripout in here.
+      # - id: identity  # Prints all files passed to pre-commits. Debugging.
+  - repo: https://github.com/lyz-code/yamlfix
+    rev: 1.17.0
+    hooks:
+      - id: yamlfix
+  - repo: https://github.com/pre-commit/pre-commit-hooks
+    rev: v4.6.0
+    hooks:
+      - id: check-added-large-files
+        args: [--maxkb=25]
+      - id: check-case-conflict
+      - id: check-merge-conflict
+      - id: check-vcs-permalinks
+      - id: check-yaml
+      - id: check-toml
+      - id: debug-statements
+      - id: end-of-file-fixer
+      - id: fix-byte-order-marker
+        types: [text]
+      - id: forbid-submodules
+      - id: mixed-line-ending
+        args: [--fix=lf]
+        description: Forces to replace line ending by the UNIX 'lf' character.
+      - id: name-tests-test
+        args: [--pytest-test-first]
+      - id: trailing-whitespace
+      - id: check-ast
+      - id: check-docstring-first
+      - id: no-commit-to-branch
         args: [--branch, main]
-    -   id: trailing-whitespace
--   repo: https://github.com/pre-commit/pygrep-hooks
-    rev: v1.10.0
+  - repo: https://github.com/adrienverge/yamllint.git
+    rev: v1.35.1
     hooks:
-    -   id: python-check-blanket-noqa
-    -   id: python-check-mock-methods
-    -   id: python-no-eval
-    -   id: python-no-log-warn
-    -   id: python-use-type-annotations
-    -   id: text-unicode-replacement-char
--   repo: https://github.com/charliermarsh/ruff-pre-commit
-    rev: v0.8.4
+      - id: yamllint
+        args:
+          - --config-data
+          - '{extends: default, rules: {line-length: {max: 120}}}'
+  - repo: https://github.com/astral-sh/ruff-pre-commit
+    rev: v0.6.8
     hooks:
+      # Run the linter.
       - id: ruff
+        types_or: [python, jupyter]
+        args:
+          - --fix
+      # Run the formatter.
       - id: ruff-format
--   repo: https://github.com/executablebooks/mdformat
-    rev: 0.7.21
+        types_or: [python, jupyter]
+  - repo: https://github.com/kynan/nbstripout
+    rev: 0.7.1
     hooks:
-    -   id: mdformat
-        additional_dependencies: [
-            mdformat-gfm,
-            mdformat-ruff,
-        ]
-        args: [--wrap, "88"]
+      - id: nbstripout
+        args:
+          - --extra-keys
+          - metadata.kernelspec metadata.language_info.version metadata.vscode
+  - repo: https://github.com/executablebooks/mdformat
+    rev: 0.7.17
+    hooks:
+      - id: mdformat
+        additional_dependencies:
+          - mdformat-gfm
+          - mdformat-gfm-alerts
+          - mdformat-ruff
+        args: [--wrap, '88']
         files: (README\.md)
--   repo: https://github.com/executablebooks/mdformat
-    rev: 0.7.21
+  - repo: https://github.com/executablebooks/mdformat
+    rev: 0.7.17
     hooks:
-    -   id: mdformat
-        additional_dependencies: [
-            mdformat-myst,
-            mdformat-ruff,
-        ]
-        args: [--wrap, "88"]
+      - id: mdformat
+        additional_dependencies: [mdformat-myst, mdformat-ruff]
+        args: [--wrap, '88']
         files: (docs/.)
--   repo: https://github.com/crate-ci/typos
-    rev: v1.28.4
-    hooks:
-      - id: typos
--   repo: meta
-    hooks:
-    -   id: check-hooks-apply
-    -   id: check-useless-excludes
-    # -   id: identity  # Prints all files passed to pre-commits. Debugging.
--   repo: local
-    hooks:
-    -   id: typing
-        name: typing
-        language: system
-        entry: pixi run typing
-        pass_filenames: false
+ci:
+  autoupdate_schedule: monthly

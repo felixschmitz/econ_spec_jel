@@ -23,6 +23,10 @@ def task_merge_metadata(
     return _merge_metadata(data_catalog=data_catalog)
 
 
+def task_data_cleaning() -> None:
+    """Clean the data."""
+
+
 def _merge_metadata(
     data_catalog: Annotated[Path, DATACATALOGS["metadata"]],
 ) -> pd.DataFrame:
