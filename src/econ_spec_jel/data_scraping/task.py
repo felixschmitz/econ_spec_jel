@@ -1,7 +1,7 @@
 """Task functions for data scraping."""
 
 from pathlib import Path
-from typing import Annotated, Any, NamedTuple
+from typing import Annotated, Any
 
 import requests
 from pytask import task
@@ -10,88 +10,83 @@ from econ_spec_jel.config import DATACATALOGS, MAX_DP_NUMBER
 from econ_spec_jel.data_scraping.helper import extract_metadata
 
 
-class Scraper(NamedTuple):
-    """NamedTuple to store the base urls and the dp number of a discussion paper."""
-
-    metadata_base_url: str
-    file_base_url: str
-    dp_number: int
+def _metadata_has_not_been_scraped(dp_number: int) -> bool:
+    return not DATACATALOGS["metadata"][f"{dp_number}"].path.is_file()
 
 
-SCRAPERS = [
-    Scraper(
-        metadata_base_url="https://www.iza.org/publications/dp/",
-        file_base_url="https://docs.iza.org/dp",
-        dp_number=num,
-    )
-    for num in range(1, MAX_DP_NUMBER + 1)
-]
+def _file_has_not_been_downloaded(dp_number: int) -> bool:
+    return not DATACATALOGS["files"][f"{dp_number}"].path.is_file()
 
-for scraper in SCRAPERS:
-    if not DATACATALOGS["metadata"][str(scraper.dp_number)].path.is_file():
 
-        @task(id=str(scraper.dp_number))
+for dp_number in range(1, MAX_DP_NUMBER + 1):
+    if _metadata_has_not_been_scraped(dp_number=dp_number):
+
+        @task(id=f"{dp_number}")
         def task_scrape_metadata(
-            scraper: Scraper = scraper,
-        ) -> Annotated[Path, DATACATALOGS["metadata"][str(scraper.dp_number)]]:
-            """Scrape metadata from discussion paper page.
+            dp_number: int = dp_number,
+        ) -> Annotated[
+            Path,
+            (
+                DATACATALOGS["metadata"][f"{dp_number}"],
+                DATACATALOGS["files"][f"{dp_number}"],
+            ),
+        ]:
+            """Scrape discussion paper metadata.
 
             Args:
-                scraper: Scraper object with metadata_base_url and dp_number attributes.
+                dp_number: Discussion paper number.
 
             Returns
             -------
                 dict: Metadata.
             """
-            return _scrape_metadata(
-                base_url=scraper.metadata_base_url, dp_number=scraper.dp_number
-            )
+            return _scrape_metadata(dp_number=dp_number)
 
-    if (not DATACATALOGS["files"][str(scraper.dp_number)].path.is_file()) and (
-        DATACATALOGS["metadata"][str(scraper.dp_number)].load()["file_url"] is not None
-    ):
+    if _file_has_not_been_downloaded(dp_number=dp_number):
 
-        @task(id=str(scraper.dp_number))
-        def task_scrape_file(
-            scraper: Scraper = scraper,
-        ) -> Annotated[Path, DATACATALOGS["files"][str(scraper.dp_number)]]:
-            """Download discussion paper file from URL.
+        @task(id=f"{dp_number}", after=f"task_scrape_metadata[{dp_number}]")
+        def task_download_file(
+            dp_number: int = dp_number,
+        ) -> Annotated[Path, DATACATALOGS["files"][f"{dp_number}"]]:
+            """Download the discussion paper file.
 
             Args:
-                scraper: Scraper object with metadata_base_url and dp_number attributes.
+                dp_number: Discussion paper number.
 
             Returns
             -------
                 bytes: File content.
             """
-            return _download_file(
-                base_url=scraper.file_base_url, dp_number=scraper.dp_number
-            )
+            return _download_file(dp_number=dp_number)
 
 
-def _scrape_metadata(base_url: str, dp_number: int) -> dict[str, Any]:
-    url = f"{base_url}{dp_number}"
+def _scrape_metadata(dp_number: int) -> dict[str, Any]:
+    url = f"https://www.iza.org/publications/dp/{dp_number}"
     response = requests.get(url, timeout=10)
     if response.status_code != 200:  # PLR2004
-        return {"dp_number": dp_number} | {
-            k: None
-            for k in [
-                "title",
-                "author_names",
-                "author_urls",
-                "published",
-                "publication_date_month",
-                "publication_date_year",
-                "abstract",
-                "keywords",
-                "jel_codes",
-                "file_url",
-            ]
-        }
+        return _metadata_for_missing_dp(dp_number=dp_number)
     return extract_metadata(response, dp_number)
 
 
-def _download_file(base_url: str, dp_number: int) -> bytes:
-    url = f"{base_url}{dp_number}.pdf"
+def _download_file(dp_number: int) -> bytes:
+    url = f"https://docs.iza.org/dp{dp_number}.pdf"
     response = requests.get(url, timeout=10)
     return response.content
+
+
+def _metadata_for_missing_dp(dp_number: int) -> dict[str, Any]:
+    return {"dp_number": dp_number} | {
+        k: None
+        for k in [
+            "title",
+            "author_names",
+            "author_urls",
+            "published",
+            "publication_date_month",
+            "publication_date_year",
+            "abstract",
+            "keywords",
+            "jel_codes",
+            "file_url",
+        ]
+    }
