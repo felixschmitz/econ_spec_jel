@@ -1,15 +1,12 @@
 """Task functions for data scraping."""
 
 from pathlib import Path
-from typing import Annotated
-from typing import Any
-from typing import NamedTuple
+from typing import Annotated, Any, NamedTuple
 
 import requests
 from pytask import task
 
-from econ_spec_jel.config import DATACATALOGS
-from econ_spec_jel.config import MAX_DP_NUMBER
+from econ_spec_jel.config import DATACATALOGS, MAX_DP_NUMBER
 from econ_spec_jel.data_scraping.helper import extract_metadata
 
 
