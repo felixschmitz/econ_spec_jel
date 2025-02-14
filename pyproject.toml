@@ -50,6 +50,8 @@ pytask = ">=0.5.2,<0.6"
 pygraphviz = ">=1.14,<2"
 pytask-parallel = ">=0.5.0,<0.6"
 types-requests = ">=2.32.0.20241016,<3"
+plotly = ">=6.0.0,<7"
+pyarrow = ">=19.0.0,<20"
 
 [tool.pixi.pypi-dependencies]
 "econ_spec_jel" = { path = ".", editable = true }
@@ -137,6 +139,7 @@ select = ["ALL"]
 "docs/source/conf.py" = ["INP001"]
 "src/econ_spec_jel/data_scraping/task.py" = ["PLR2004"]
 "src/econ_spec_jel/data_preparation/task.py" = ["SLF001"]
+"src/econ_spec_jel/config.py" = ["FBT003"]
 
 [tool.ruff.lint.isort]
 force-single-line = true
