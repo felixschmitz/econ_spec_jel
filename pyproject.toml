@@ -1,5 +1,5 @@
 [build-system]
-requires = ["hatchling"]
+requires = ["hatchling", "setuptools-scm"]
 build-backend = "hatchling.build"
 
 [project]
@@ -35,6 +35,8 @@ Documentation = "https://github.com/felixschmitz/econ_spec_jel"
 Github = "https://github.com/felixschmitz/econ_spec_jel"
 Tracker = "https://github.com/felixschmitz/econ_spec_jel/issues"
 
+[tool.setuptools_scm]
+
 [tool.pixi.project]
 channels = ["conda-forge"]
 platforms = ["win-64", "linux-64", "osx-64", "osx-arm64"]
@@ -52,6 +54,11 @@ pytask-parallel = ">=0.5.0,<0.6"
 types-requests = ">=2.32.0.20241016,<3"
 plotly = ">=6.0.0,<7"
 pyarrow = ">=19.0.0,<20"
+toml = "*"
+jupyterlab = "*"
+pre-commit = "*"
+ipykernel = "*"
+regex = ">=2024.11.6,<2025"
 
 [tool.pixi.pypi-dependencies]
 "econ_spec_jel" = { path = ".", editable = true }
@@ -122,7 +129,7 @@ parallel_backend = "loky"
 n_workers = 9
 
 [tool.ruff]
-target-version = "py311"
+target-version = "py310"
 fix = true
 unsafe-fixes = true
 
