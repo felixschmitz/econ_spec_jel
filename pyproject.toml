@@ -3,7 +3,7 @@ requires = ["hatchling", "setuptools-scm"]
 build-backend = "hatchling.build"
 
 [project]
-name = "econ-spec-jel"
+name = "econ_spec_jel"
 version = "0.1.0"
 description = "A project to understand the specialization trends in economics research using JEL codes."
 requires-python = ">=3.9"
@@ -59,6 +59,7 @@ jupyterlab = "*"
 pre-commit = "*"
 ipykernel = "*"
 regex = ">=2024.11.6,<2025"
+requests = ">=2.32.3,<3"
 
 [tool.pixi.pypi-dependencies]
 "econ_spec_jel" = { path = ".", editable = true }
@@ -125,8 +126,6 @@ paths = ["./src/econ_spec_jel", "./documents"]
 pdbcls = "pdbp:Pdb"
 editor_url_scheme = "vscode"
 task_files = ["task_*.py", "task.py", "tasks.py"]
-parallel_backend = "loky"
-n_workers = 9
 
 [tool.ruff]
 target-version = "py310"
