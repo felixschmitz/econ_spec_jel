@@ -5,13 +5,14 @@ from typing import Annotated
 
 import pandas as pd
 import regex as re
+import pytask
 
 from econ_spec_jel.config import DATACATALOGS
 
 
 def task_merge_metadata(
-    data_catalog: Annotated[Path, DATACATALOGS["metadata"]],
-) -> Annotated[Path, DATACATALOGS["metadata"]["merged"]]:
+    data_catalog: Annotated[Path, DATACATALOGS["raw"]["metadata"]],
+) -> Annotated[Path, DATACATALOGS["data"]["merged"]]:
     """Merge metadata of all discussion papers.
 
     Args:
@@ -25,8 +26,8 @@ def task_merge_metadata(
 
 
 def task_data_cleaning(
-    merged_metadata: Annotated[Path, DATACATALOGS["metadata"]["merged"]],
-) -> Annotated[Path, DATACATALOGS["metadata"]["cleaned"]]:
+    merged_metadata: Annotated[Path, DATACATALOGS["data"]["merged"]],
+) -> Annotated[Path, DATACATALOGS["data"]["cleaned"]]:
     """Clean the metadata.
 
     Args:
@@ -40,12 +41,10 @@ def task_data_cleaning(
 
 
 def _merge_metadata(
-    data_catalog: Annotated[Path, DATACATALOGS["metadata"]],
+    data_catalog: pytask.DataCatalog,
 ) -> pd.DataFrame:
     data = [
-        DATACATALOGS["metadata"][entry].load()
-        for entry in data_catalog._entries
-        if entry not in ("merged", "cleaned", "analysis")
+        data_catalog[entry].load() for entry in data_catalog._entries if entry.isdigit()
     ]  # SLF001
     merged_data = pd.DataFrame.from_records(data).sort_values(by="dp_number")
     return merged_data.reset_index(drop=True)

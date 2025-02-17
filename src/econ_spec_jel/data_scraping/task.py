@@ -11,11 +11,11 @@ from econ_spec_jel.data_scraping.helper import extract_metadata
 
 
 def _metadata_has_not_been_scraped(dp_number: int) -> bool:
-    return not DATACATALOGS["metadata"][f"{dp_number}"].path.is_file()
+    return not DATACATALOGS["raw"]["metadata"][f"{dp_number}"].path.is_file()
 
 
 def _file_has_not_been_downloaded(dp_number: int) -> bool:
-    return not DATACATALOGS["files"][f"{dp_number}"].path.is_file()
+    return not DATACATALOGS["raw"]["files"][f"{dp_number}"].path.is_file()
 
 
 for dp_number in range(1, MAX_DP_NUMBER + 1):
@@ -24,7 +24,7 @@ for dp_number in range(1, MAX_DP_NUMBER + 1):
         @task(id=f"{dp_number}")
         def task_scrape_metadata(
             dp_number: int = dp_number,
-        ) -> Annotated[Path, DATACATALOGS["metadata"][f"{dp_number}"]]:
+        ) -> Annotated[Path, DATACATALOGS["raw"]["metadata"][f"{dp_number}"]]:
             """Scrape discussion paper metadata.
 
             Args:
@@ -41,7 +41,7 @@ for dp_number in range(1, MAX_DP_NUMBER + 1):
         @task(id=f"{dp_number}", after=f"task_scrape_metadata[{dp_number}]")
         def task_download_file(
             dp_number: int = dp_number,
-        ) -> Annotated[Path, DATACATALOGS["files"][f"{dp_number}"]]:
+        ) -> Annotated[Path, DATACATALOGS["raw"]["files"][f"{dp_number}"]]:
             """Download the discussion paper file.
 
             Args:

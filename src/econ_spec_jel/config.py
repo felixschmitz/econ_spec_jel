@@ -16,8 +16,11 @@ DATA = ROOT.joinpath("data").resolve()
 DOCUMENTS = ROOT.joinpath("documents").resolve()
 
 DATACATALOGS = {
-    "metadata": DataCatalog(name="metadata"),
-    "files": DataCatalog(name="files"),
+    "raw": {
+        "metadata": DataCatalog(name="metadata"),
+        "files": DataCatalog(name="files"),
+    },
+    "data": DataCatalog(name="data"),
 }
 
 MAX_DP_NUMBER = 17695

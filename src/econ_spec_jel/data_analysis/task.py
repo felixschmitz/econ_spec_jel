@@ -9,8 +9,8 @@ from econ_spec_jel.config import DATACATALOGS
 
 
 def task_data_analysis(
-    df: Annotated[Path, DATACATALOGS["metadata"]["cleaned"]],
-) -> Annotated[Path, DATACATALOGS["metadata"]["analysis"]]:
+    df: Annotated[Path, DATACATALOGS["data"]["cleaned"]],
+) -> Annotated[Path, DATACATALOGS["data"]["analysis"]]:
     """Metadata analysis.
 
     Args:
