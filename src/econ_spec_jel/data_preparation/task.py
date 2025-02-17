@@ -45,7 +45,7 @@ def _merge_metadata(
     data = [
         DATACATALOGS["metadata"][entry].load()
         for entry in data_catalog._entries
-        if entry not in ("merged", "cleaned")
+        if entry not in ("merged", "cleaned", "analysis")
     ]  # SLF001
     merged_data = pd.DataFrame.from_records(data).sort_values(by="dp_number")
     return merged_data.reset_index(drop=True)
