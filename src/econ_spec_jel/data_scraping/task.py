@@ -24,13 +24,7 @@ for dp_number in range(1, MAX_DP_NUMBER + 1):
         @task(id=f"{dp_number}")
         def task_scrape_metadata(
             dp_number: int = dp_number,
-        ) -> Annotated[
-            Path,
-            (
-                DATACATALOGS["metadata"][f"{dp_number}"],
-                DATACATALOGS["files"][f"{dp_number}"],
-            ),
-        ]:
+        ) -> Annotated[Path, DATACATALOGS["metadata"][f"{dp_number}"]]:
             """Scrape discussion paper metadata.
 
             Args:
