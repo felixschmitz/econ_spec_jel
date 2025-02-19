@@ -9,6 +9,21 @@ import pytask
 
 from econ_spec_jel.config import DATACATALOGS
 
+MONTH_ORDER = [
+    "January",
+    "February",
+    "March",
+    "April",
+    "May",
+    "June",
+    "July",
+    "August",
+    "September",
+    "October",
+    "November",
+    "December",
+]
+
 
 def task_merge_metadata(
     data_catalog: Annotated[Path, DATACATALOGS["raw"]["metadata"]],
@@ -74,12 +89,10 @@ def _clean_metadata(
         cleaned_data["other_publication_information"],
         cleaned_data["superseded"],
     ) = _clean_publication_information(cleaned_data["published_raw"])
-    cleaned_data["publication_month"] = metadata_complete_title_file_url[
-        "publication_date_month"
-    ].astype("string[pyarrow]")
-    cleaned_data["publication_year"] = metadata_complete_title_file_url[
-        "publication_date_year"
-    ].astype("uint16[pyarrow]")
+    cleaned_data["publication_year_month"] = _create_publication_year_month(
+        metadata_complete_title_file_url["publication_date_year"],
+        metadata_complete_title_file_url["publication_date_month"],
+    )
     cleaned_data["abstract"] = metadata_complete_title_file_url["abstract"].astype(
         "string[pyarrow]"
     )
@@ -101,6 +114,15 @@ def _fuzzy_search_series_regex(
     return sr[
         sr.apply(lambda x: bool(re.search(re_pattern, str(x), flags=re.IGNORECASE)))
     ]
+
+
+def _create_publication_year_month(year: pd.Series, month: pd.Series) -> pd.Series:
+    month_numerical = month.map(
+        {month_name: i + 1 for i, month_name in enumerate(MONTH_ORDER)}
+    )
+    return pd.to_datetime(
+        year.astype("string[pyarrow]") + "-" + month_numerical.astype("string[pyarrow]")
+    )
 
 
 def _get_neither_published_nor_forthcoming(
