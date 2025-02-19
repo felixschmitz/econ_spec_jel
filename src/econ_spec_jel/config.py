@@ -3,6 +3,9 @@
 from pathlib import Path
 import pandas as pd
 from pytask import DataCatalog
+import plotly.io as pio
+
+pio.kaleido.scope.mathjax = None
 
 pd.set_option("mode.copy_on_write", True)
 pd.set_option("future.infer_string", True)

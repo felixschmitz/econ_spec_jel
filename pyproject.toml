@@ -16,7 +16,7 @@ classifiers = [
   "Programming Language :: Python :: 3",
   "Programming Language :: Python :: 3 :: Only",
 ]
-dependencies = ["pdbp>=1.6.1,<2"]
+dependencies = ["pdbp>=1.6.1,<2", "kaleido>=0.2.1,<0.3"]
 
 [project.readme]
 file = "README.md"
