@@ -8177,7 +8177,7 @@ packages:
   name: econ-spec-jel
   version: 0.1.0
   path: .
-  sha256: d0d145cb88cd474041a5bc711e44f4cd6a7c59001e2596b954ecdabf9fc46adb
+  sha256: 903c51b5d94bbe541fadd794b78ee606de355d4df412c859f0411c5432294f4d
   requires_dist:
   - pdbp>=1.6.1,<2
   - kaleido>=0.2.1,<0.3

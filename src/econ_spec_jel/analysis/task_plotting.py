@@ -116,5 +116,6 @@ def _plot_monthly_trends(df: pd.DataFrame) -> go.Figure:
             "color": "red",
         },
         legend={"x": 0.05, "y": 0.95},
+        margin={"l": 20, "r": 20, "t": 20, "b": 20},
     )
     return fig

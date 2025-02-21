@@ -7,7 +7,7 @@ import requests
 from pytask import task
 
 from econ_spec_jel.config import DATACATALOGS, MAX_DP_NUMBER
-from econ_spec_jel.data_scraping.helper import extract_metadata
+from econ_spec_jel.scraping.helper import extract_metadata
 
 
 def _metadata_has_not_been_scraped(dp_number: int) -> bool:

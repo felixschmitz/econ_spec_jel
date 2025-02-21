@@ -1,13 +1,7 @@
-"""Data preparation tasks."""
-
-from pathlib import Path
-from typing import Annotated
+"""Helper functions for cleaning the metadata of discussion papers."""
 
 import pandas as pd
 import regex as re
-import pytask
-
-from econ_spec_jel.config import DATACATALOGS
 
 MONTH_ORDER = [
     "January",
@@ -25,87 +19,6 @@ MONTH_ORDER = [
 ]
 
 
-def task_merge_metadata(
-    data_catalog: Annotated[Path, DATACATALOGS["raw"]["metadata"]],
-) -> Annotated[Path, DATACATALOGS["data"]["merged"]]:
-    """Merge metadata of all discussion papers.
-
-    Args:
-        data_catalog (pytask.DataCatalog): DataCatalog containing metadata.
-
-    Returns
-    -------
-        pd.DataFrame: Merged metadata.
-    """
-    return _merge_metadata(data_catalog=data_catalog)
-
-
-def task_data_cleaning(
-    merged_metadata: Annotated[Path, DATACATALOGS["data"]["merged"]],
-) -> Annotated[Path, DATACATALOGS["data"]["cleaned"]]:
-    """Clean the metadata.
-
-    Args:
-        merged_metadata (pd.DataFrame): Merged metadata.
-
-    Returns
-    -------
-        pd.DataFrame: Cleaned metadata.
-    """
-    return _clean_metadata(merged_metadata)
-
-
-def _merge_metadata(
-    data_catalog: pytask.DataCatalog,
-) -> pd.DataFrame:
-    data = [
-        data_catalog[entry].load() for entry in data_catalog._entries if entry.isdigit()
-    ]  # SLF001
-    merged_data = pd.DataFrame.from_records(data).sort_values(by="dp_number")
-    return merged_data.reset_index(drop=True)
-
-
-def _clean_metadata(
-    merged_metadata: pd.DataFrame,
-) -> pd.DataFrame:
-    metadata_complete_title_file_url = merged_metadata.dropna(
-        subset=["title", "file_url"]
-    )
-    cleaned_data = pd.DataFrame()
-    cleaned_data["dp_number"] = metadata_complete_title_file_url["dp_number"].astype(
-        "uint16[pyarrow]"
-    )
-    cleaned_data["title"] = metadata_complete_title_file_url["title"].astype(
-        "string[pyarrow]"
-    )
-    cleaned_data["author_names"] = metadata_complete_title_file_url["author_names"]
-    cleaned_data["author_urls"] = metadata_complete_title_file_url["author_urls"]
-    cleaned_data["published_raw"] = metadata_complete_title_file_url[
-        "published"
-    ].astype("string[pyarrow]")
-    (
-        cleaned_data["published"],
-        cleaned_data["forthcoming"],
-        cleaned_data["other_publication_information"],
-        cleaned_data["superseded"],
-    ) = _clean_publication_information(cleaned_data["published_raw"])
-    cleaned_data["publication_year_month"] = _create_publication_year_month(
-        metadata_complete_title_file_url["publication_date_year"],
-        metadata_complete_title_file_url["publication_date_month"],
-    )
-    cleaned_data["abstract"] = metadata_complete_title_file_url["abstract"].astype(
-        "string[pyarrow]"
-    )
-    cleaned_data["keywords"] = metadata_complete_title_file_url["keywords"]
-    cleaned_data["jel_codes"] = _clean_jel_codes(
-        metadata_complete_title_file_url["jel_codes"]
-    )
-    cleaned_data["file_url"] = metadata_complete_title_file_url["file_url"].astype(
-        "string[pyarrow]"
-    )
-    return _drop_dp_with_missing_data(cleaned_data)
-
-
 def _fuzzy_search_series_regex(
     sr: pd.Series, include: str, exclude: str | None = None, error_level: int = 3
 ) -> pd.Series:
@@ -116,7 +29,17 @@ def _fuzzy_search_series_regex(
     ]
 
 
-def _create_publication_year_month(year: pd.Series, month: pd.Series) -> pd.Series:
+def create_publication_year_month(year: pd.Series, month: pd.Series) -> pd.Series:
+    """Create a datetime object from year and month.
+
+    Args:
+        year (pd.Series): Year.
+        month (pd.Series): Month.
+
+    Returns
+    -------
+        pd.Series: Year-month.
+    """
     month_numerical = month.map(
         {month_name: i + 1 for i, month_name in enumerate(MONTH_ORDER)}
     )
@@ -157,9 +80,19 @@ def _determine_superseded_dp(sr: pd.Series) -> pd.Series:
     return pd.concat([old_rows, new_rows]).sort_index()
 
 
-def _clean_publication_information(
+def clean_publication_information(
     sr: pd.Series,
 ) -> tuple[pd.Series]:
+    """Clean publication information.
+
+    Args:
+        sr (pd.Series): Publication information.
+
+    Returns
+    -------
+        tuple[pd.Series]: Published, forthcoming,
+        other publication information, and superseded.
+    """
     # replace typos of published (pubished, publiched, publishd, pubslished,
     # publlished, publslihed, publiished, publisehd, publilshed, publshed,
     # publishes, pablished, piblished, publishled, publication)
@@ -173,7 +106,16 @@ def _clean_publication_information(
     return published, forthcoming, other_publication_information, superseded
 
 
-def _clean_jel_codes(sr: pd.Series) -> pd.Series:
+def clean_jel_codes(sr: pd.Series) -> pd.Series:
+    """Clean JEL codes of discussion paper.
+
+    Args:
+        sr (pd.Series): JEL codes.
+
+    Returns
+    -------
+        pd.Series: Cleaned JEL codes.
+    """
     sr_manual_adapted = _apply_manual_adaptations(sr)
     sr_capitalized = _capitalize_jel_codes(sr_manual_adapted)
     sr_leading_i = _replace_leading_one_with_i(sr_capitalized)
@@ -265,7 +207,17 @@ def _sort_jel_codes(sr: pd.Series) -> pd.Series:
     )
 
 
-def _drop_dp_with_missing_data(df: pd.DataFrame) -> pd.DataFrame:
+def drop_dp_with_missing_data(df: pd.DataFrame) -> pd.DataFrame:
+    """Drop discussion papers with missing data.
+
+    Args:
+        df (pd.DataFrame): Metadata.
+
+    Returns
+    -------
+        pd.DataFrame: Metadata without missing data.
+
+    """
     df_unique_dp = _not_superseded_dp(df)
     return _non_empty_jel(df_unique_dp)
 
