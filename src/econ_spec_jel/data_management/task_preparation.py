@@ -31,4 +31,5 @@ def _prepare_data_for_analysis(
         & (df["publication_year_month"].dt.year < 2025)
     ].copy()  # PLR2004
     out["jel_codes_count"] = out["jel_codes"].apply(len)
+    out["authors_count"] = out["author_names"].apply(len)
     return out

@@ -60,6 +60,8 @@ pre-commit = "*"
 ipykernel = "*"
 regex = ">=2024.11.6,<2025"
 requests = ">=2.32.3,<3"
+orca = ">=1.8,<2"
+python-kaleido = ">=0.2.1,<0.3"
 
 [tool.pixi.pypi-dependencies]
 "econ_spec_jel" = { path = ".", editable = true }
@@ -137,16 +139,15 @@ extend-ignore = [
   "COM812", # Comply with ruff-format.
   "ISC001", # Comply with ruff-format.
   "I001", # Allow multiple imports on one line
+  "PLR2004" # Allow magic numbers
 ]
 select = ["ALL"]
 
 [tool.ruff.lint.per-file-ignores]
 "tests/*" = ["D", "ANN", "S101"]
 "docs/source/conf.py" = ["INP001"]
-"src/econ_spec_jel/scraping/task.py" = ["PLR2004"]
-"src/econ_spec_jel/data_management/task_merge.py" = ["SLF001", "PLR2004"]
-"src/econ_spec_jel/data_management/task_preparation.py" = ["PLR2004"]
-"src/econ_spec_jel/data_management/clean_helper.py" = ["PLR2004"]
+"src/econ_spec_jel/data_management/task_merge.py" = ["SLF001"]
+
 "src/econ_spec_jel/config.py" = ["FBT003"]
 
 [tool.ruff.lint.isort]
