@@ -25,22 +25,20 @@ def task_plot_monthly_trends(
 
 
 def _plot_monthly_trends(df: pd.DataFrame) -> go.Figure:
-    # Aggregate data: Number of publications per year-month
+    # Number of publications per year-month
     pub_counts = (
         df.groupby("publication_year_month").size().reset_index(name="pub_count")
     )
 
-    # Aggregate data: Average JEL codes per paper per year-month
+    # Average JEL codes per paper per year-month
     jel_avg = (
         df.groupby("publication_year_month")["jel_codes_count"]
         .mean()
         .reset_index(name="avg_jel_per_pub")
     )
 
-    # Merge both datasets
     plot_data = pub_counts.merge(jel_avg, on="publication_year_month")
-
-    # Compute 6-month rolling average for smoothing
+    # 6-month rolling average for smoothing
     plot_data["pub_count_smooth"] = (
         plot_data["pub_count"].rolling(6, center=False).mean()
     )
@@ -49,22 +47,19 @@ def _plot_monthly_trends(df: pd.DataFrame) -> go.Figure:
     )
     smooth_indices = plot_data.index[::6]
 
-    # Create figure
     fig = go.Figure()
-
-    # Blurred original publication count line
+    # Monthly publication count line
     fig.add_trace(
         go.Scatter(
             x=plot_data["publication_year_month"],
             y=plot_data["pub_count"],
             mode="lines",
             name="Discussion Papers (monthly)",
-            line={"color": "blue", "width": 1, "dash": "dot"},  # Light & dotted line
-            opacity=0.3,  # Blur effect
+            line={"color": "blue", "width": 1, "dash": "dot"},
+            opacity=0.3,
         )
     )
-
-    # Smoothed publication count line (every third month only)
+    # Smoothed publication count line
     fig.add_trace(
         go.Scatter(
             x=plot_data.loc[smooth_indices, "publication_year_month"],
@@ -75,20 +70,19 @@ def _plot_monthly_trends(df: pd.DataFrame) -> go.Figure:
         )
     )
 
-    # Blurred original avg. JEL codes line
+    # Monthly avg. JEL codes line
     fig.add_trace(
         go.Scatter(
             x=plot_data["publication_year_month"],
             y=plot_data["avg_jel_per_pub"],
             mode="lines",
             name="Avg. JEL Codes per Discussion Paper (monthly)",
-            line={"color": "red", "width": 1, "dash": "dot"},  # Light & dotted line
-            opacity=0.3,  # Blur effect
-            yaxis="y2",  # Assign to second y-axis
+            line={"color": "red", "width": 1, "dash": "dot"},
+            opacity=0.3,
+            yaxis="y2",
         )
     )
-
-    # Smoothed avg. JEL codes line (every third month only)
+    # Smoothed avg. JEL codes line
     fig.add_trace(
         go.Scatter(
             x=plot_data.loc[smooth_indices, "publication_year_month"],
