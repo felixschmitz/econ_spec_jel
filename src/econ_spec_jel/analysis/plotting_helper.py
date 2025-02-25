@@ -20,13 +20,20 @@ def plot_author_trends(data: pd.DataFrame) -> None:
         relevant_metric="authors_count",
         avg_name="avg_authors_per_pub",
     )
-    author_trend = _determine_author_trend(data=data)
-    author_trend["new_authors_smooth"] = (
-        author_trend["new_authors"].rolling(6, center=False).mean()
+
+    new_authors = _create_avg_and_smoothed_data(
+        data=data,
+        grouping="publication_year_month",
+        relevant_metric="authors_new",
+        avg_name="new_authors",
     )
-    author_trend["returning_authors_smooth"] = (
-        author_trend["returning_authors"].rolling(6, center=False).mean()
+    returning_authors = _create_avg_and_smoothed_data(
+        data=data,
+        grouping="publication_year_month",
+        relevant_metric="authors_returning",
+        avg_name="returning_authors",
     )
+
     smooth_indices = author_avg.index[::6]
 
     fig = go.Figure()
@@ -51,44 +58,40 @@ def plot_author_trends(data: pd.DataFrame) -> None:
     )
     fig.add_trace(
         go.Scatter(
-            x=author_trend["publication_year_month"],
-            y=author_trend["new_authors"],
+            x=new_authors["publication_year_month"],
+            y=new_authors["new_authors"],
             mode="lines",
-            name="New Authors (monthly)",
+            name="Avg. New Authors per Discussion Paper (monthly)",
             line={"color": "red", "width": 1, "dash": "dot"},
             opacity=0.3,
-            yaxis="y2",
         )
     )
     fig.add_trace(
         go.Scatter(
-            x=author_trend.loc[smooth_indices, "publication_year_month"],
-            y=author_trend.loc[smooth_indices, "new_authors_smooth"],
+            x=new_authors.loc[smooth_indices, "publication_year_month"],
+            y=new_authors.loc[smooth_indices, "new_authors_smooth"],
             mode="lines+markers",
-            name="New Authors (6-month avg.)",
+            name="Avg. New Authors per Discussion Paper (6-month avg.)",
             line={"color": "red", "width": 2},
-            yaxis="y2",
         )
     )
     fig.add_trace(
         go.Scatter(
-            x=author_trend["publication_year_month"],
-            y=author_trend["returning_authors"],
+            x=returning_authors["publication_year_month"],
+            y=returning_authors["returning_authors"],
             mode="lines",
-            name="Returning Authors (monthly)",
+            name="Avg. Returning Authors per Discussion Paper (monthly)",
             line={"color": "blue", "width": 1, "dash": "dot"},
             opacity=0.3,
-            yaxis="y2",
         )
     )
     fig.add_trace(
         go.Scatter(
-            x=author_trend.loc[smooth_indices, "publication_year_month"],
-            y=author_trend.loc[smooth_indices, "returning_authors_smooth"],
+            x=returning_authors.loc[smooth_indices, "publication_year_month"],
+            y=returning_authors.loc[smooth_indices, "returning_authors_smooth"],
             mode="lines+markers",
-            name="Returning Authors (6-month avg.)",
+            name="Avg. Returning Authors per Discussion Paper (6-month avg.)",
             line={"color": "blue", "width": 2},
-            yaxis="y2",
         )
     )
 
@@ -99,12 +102,7 @@ def plot_author_trends(data: pd.DataFrame) -> None:
             "tickvals": author_avg["publication_year_month"][::12],
             "tickformat": "%Y",
         },
-        yaxis={"title": "Avg. Authors per Discussion Paper", "color": "green"},
-        yaxis2={
-            "title": "Number of Authors (New/Returning)",
-            "overlaying": "y",
-            "side": "right",
-        },
+        yaxis={"title": "Avg. Authors per Discussion Paper"},
         legend={"x": 0.05, "y": 0.95},
         margin={"l": 20, "r": 20, "t": 20, "b": 20},
         width=3 * 300,
@@ -292,7 +290,7 @@ def _determine_author_trend(data: pd.DataFrame) -> pd.DataFrame:
         .nunique()
         .reset_index()
     )
-    out = author_counts.pivot(
+    out = author_counts.pivot_table(
         index="publication_year_month", columns="status", values="author_name"
     ).fillna(0)
     out.columns = ["new_authors", "returning_authors"]

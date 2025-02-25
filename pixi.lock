@@ -8553,7 +8553,7 @@ packages:
   name: econ-spec-jel
   version: 0.1.0
   path: .
-  sha256: 8066c7131249beb2c3ae1957b03b40d08bf3c0de049d94f905ad17ff8fb49ea1
+  sha256: 4e91fde303d5cfeba63bd6566ebd82c4d00ff33999b52a0723a093803d6337c7
   requires_dist:
   - pdbp>=1.6.1,<2
   - kaleido>=0.2.1,<0.3
