@@ -63,6 +63,7 @@ requests = ">=2.32.3,<3"
 orca = ">=1.8,<2"
 python-kaleido = ">=0.2.1,<0.3"
 networkx = ">=3.4.2,<4"
+scipy = ">=1.15.2,<2"
 
 [tool.pixi.pypi-dependencies]
 "econ_spec_jel" = { path = ".", editable = true }
