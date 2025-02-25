@@ -219,11 +219,16 @@ def drop_dp_with_missing_data(df: pd.DataFrame) -> pd.DataFrame:
 
     """
     df_unique_dp = _not_superseded_dp(df)
-    return _non_empty_jel(df_unique_dp)
+    df_manually_cleaned = _manually_clean(df_unique_dp)
+    return _non_empty_jel(df_manually_cleaned)
 
 
 def _not_superseded_dp(df: pd.DataFrame) -> pd.DataFrame:
     return df.drop(df[df["superseded"].notna()].index)
+
+
+def _manually_clean(df: pd.DataFrame) -> pd.DataFrame:
+    return df.drop(df[df.dp_number == 15057].index)  # removed since superseded
 
 
 def _non_empty_jel(df: pd.DataFrame) -> pd.DataFrame:
