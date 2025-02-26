@@ -14,6 +14,7 @@ ROOT = SRC.joinpath("..", "..").resolve()
 BLD = ROOT.joinpath("bld").resolve()
 DATA = ROOT.joinpath("data").resolve()
 DOCUMENTS = ROOT.joinpath("documents").resolve()
+FIGURES = BLD.joinpath("figures").resolve()
 
 DATACATALOGS = {
     "raw": {
@@ -30,6 +31,7 @@ __all__ = [
     "DATA",
     "DATACATALOGS",
     "DOCUMENTS",
+    "FIGURES",
     "MAX_DP_NUMBER",
     "ROOT",
     "SRC",
