@@ -1,4 +1,10 @@
-"""Data analysis tasks."""
+"""Data preparation tasks."""
+
+import nltk
+from nltk.tokenize import word_tokenize
+from nltk.corpus import stopwords
+from nltk.stem import PorterStemmer
+
 
 from pathlib import Path
 from typing import Annotated
@@ -39,7 +45,32 @@ def _prepare_data_for_analysis(
     out["authors_new"], out["authors_returning"] = (
         _count_initial_and_returning_publication(out)
     )
+    out["abstract_tokenized"] = _prepare_abstract(out)
     return out
+
+
+def _prepare_abstract(data: pd.DataFrame) -> pd.Series:
+    nltk.download("punkt")
+    nltk.download("stopwords")
+    tokens = _tokenize_abstract(data["abstract"])
+    return _stem_tokens(tokens)
+
+
+def _tokenize_abstract(sr: pd.Series) -> pd.Series:
+    stop_words = set(stopwords.words("english"))
+    cleaned_abstracts = sr.str.lower().str.replace(r"\W+", " ", regex=True)
+    # Tokenize and filter stop words
+    return pd.Series(
+        [
+            [word for word in word_tokenize(doc) if word not in stop_words]
+            for doc in cleaned_abstracts
+        ]
+    )
+
+
+def _stem_tokens(tokens: pd.Series) -> pd.Series:
+    stemmer = PorterStemmer()
+    return pd.Series([[stemmer.stem(token) for token in doc] for doc in tokens])
 
 
 def _count_initial_and_returning_publication(data: pd.DataFrame) -> tuple[pd.Series]:

@@ -64,6 +64,9 @@ orca = ">=1.8,<2"
 python-kaleido = ">=0.2.1,<0.3"
 networkx = ">=3.4.2,<4"
 scipy = ">=1.15.2,<2"
+cdlib = ">=0.4.0,<0.5"
+nltk = ">=3.9.1,<4"
+tqdm = ">=4.67.1,<5"
 
 [tool.pixi.pypi-dependencies]
 "econ_spec_jel" = { path = ".", editable = true }
