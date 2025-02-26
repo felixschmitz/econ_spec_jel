@@ -152,7 +152,7 @@ select = ["ALL"]
 [tool.ruff.lint.per-file-ignores]
 "tests/*" = ["D", "ANN", "S101"]
 "docs/source/conf.py" = ["INP001"]
-"src/econ_spec_jel/data_management/task_merge.py" = ["SLF001"]
+"src/econ_spec_jel/data_management/task_merge.py" = ["SLF001", "S301"]
 "src/econ_spec_jel/analysis/task_plotting.py" = ["ANN001"]
 "src/econ_spec_jel/text_model/task_model.py" = ["PLR0913"]
 
