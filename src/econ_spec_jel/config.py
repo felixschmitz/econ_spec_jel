@@ -22,9 +22,11 @@ DATACATALOGS = {
         "files": DataCatalog(name="files"),
     },
     "data": DataCatalog(name="data"),
+    "topic_model": DataCatalog(name="topic_model"),
 }
 
 MAX_DP_NUMBER = 17695
+NUM_TOPICS = 750
 
 __all__ = [
     "BLD",
@@ -33,6 +35,7 @@ __all__ = [
     "DOCUMENTS",
     "FIGURES",
     "MAX_DP_NUMBER",
+    "NUM_TOPICS",
     "ROOT",
     "SRC",
 ]

@@ -67,6 +67,7 @@ scipy = ">=1.15.2,<2"
 cdlib = ">=0.4.0,<0.5"
 nltk = ">=3.9.1,<4"
 tqdm = ">=4.67.1,<5"
+gensim = ">=4.3.3,<5"
 
 [tool.pixi.pypi-dependencies]
 "econ_spec_jel" = { path = ".", editable = true }
@@ -153,6 +154,7 @@ select = ["ALL"]
 "docs/source/conf.py" = ["INP001"]
 "src/econ_spec_jel/data_management/task_merge.py" = ["SLF001"]
 "src/econ_spec_jel/analysis/task_plotting.py" = ["ANN001"]
+"src/econ_spec_jel/text_model/task_model.py" = ["PLR0913"]
 
 "src/econ_spec_jel/config.py" = ["FBT003"]
 
