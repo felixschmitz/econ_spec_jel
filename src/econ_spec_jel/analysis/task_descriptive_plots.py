@@ -42,7 +42,7 @@ def _error_handling(
 
 ID_KWARGS = {
     "plot_author_trends": {"produces": FIGURES / "fig_author_trends.png"},
-    "plot_dp_counts": {"produces": FIGURES / "fig_counts_avg_jel_codes.png"},
+    "plot_dp_counts": {"produces": FIGURES / "fig_counts_dp_jel_codes.png"},
     "plot_monthly_trends": {"produces": FIGURES / "fig_dp_counts.png"},
     "plot_most_common_jel_codes": {
         "produces": FIGURES / "fig_top5overall_jel.png",
@@ -57,13 +57,13 @@ ID_KWARGS = {
 for id_, kwargs_ in ID_KWARGS.items():
 
     @task(id=id_, kwargs=kwargs_)
-    def task_plot(
+    def task_(
         data: Annotated[Path, DATACATALOGS["data"]["analysis"]],
         produces: Path,
         id_: str = id_,
         number_of_codes: int = 0,
     ) -> None:
-        """Create a plot.
+        """Create a plot based on the merged analysis data.
 
         Args:
             data (Path): Path to the analysis data.

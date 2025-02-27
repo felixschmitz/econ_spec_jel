@@ -58,7 +58,7 @@ def _prepare_abstract(data: pd.DataFrame) -> pd.Series:
 
 def _tokenize_abstract(sr: pd.Series) -> pd.Series:
     stop_words = set(stopwords.words("english"))
-    cleaned_abstracts = sr.str.lower().str.replace(r"\W+", " ", regex=True)
+    cleaned_abstracts = sr.str.lower().str.replace(r"[^a-zA-Z]+", " ", regex=True)
     # Tokenize and filter stop words
     return pd.Series(
         [
