@@ -5,6 +5,9 @@
 [![pre-commit.ci status](https://results.pre-commit.ci/badge/github/felixschmitz/econ_spec_jel/main.svg)](https://results.pre-commit.ci/latest/github/felixschmitz/econ_spec_jel/main)
 [![Ruff](https://img.shields.io/endpoint?url=https://raw.githubusercontent.com/astral-sh/ruff/main/assets/badge/v2.json)](https://github.com/astral-sh/ruff)
 
+Project as part of the course "Topics Course: Text Data in Economics" at the University
+of Bonn 2024/25.
+
 ## Installation
 
 To work with the project, you should have [pixi](https://pixi.sh/latest/) installed.
