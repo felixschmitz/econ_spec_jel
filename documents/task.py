@@ -9,11 +9,12 @@ from pytask_latex import compilation_steps as cs
 from econ_spec_jel.config import BLD, DOCUMENTS, ROOT
 
 figures = [
-    "fig_counts_avg_jel_codes.png",
+    "fig_counts_dp_jel_codes.png",
     "fig_author_trends.png",
     "fig_dp_counts.png",
     "fig_top5overall_jel.png",
     "fig_top3yearly_jel.png",
+    "fig_topic_trends.png",
 ]
 DOCUMENTS_KWARGS = {
     "paper": {"depends_on": [BLD / "figures" / figure for figure in figures]},

@@ -58,8 +58,6 @@ University of Bonn, Winter Term 2024/25}
 \maketitle
 \footnotetext[1]{Email: \href{mailto:s87fschm@uni-bonn.de}{s87fschm@uni-bonn.de}, Matriculation Number: 50173514}
 
-\clearpage
-
 \section{Introduction}
 This paper proposes research to investigates specialization trends within economics research, focusing on whether subfields are becoming more specialized over time.
 Understanding these trends is crucial as increasing specialization can influence knowledge dissemination, collaboration patterns, and the evolution of economic thought.
@@ -152,47 +150,40 @@ This is mainly to ensure a sufficient number of observations per month (for the 
 This reduces the sample size by 195 observations. The final number of discussion papers analysed is 17,449.
 
 \subsection{Descriptive Statistics}
+To get an overview of the data, the following descriptive statistics are presented.
+Statistics of interest are related to discussion papers, JEL Codes, and authors.
+In Figure \ref{fig:dp_counts}, it can be seen that the number of discussion papers published per month has increased over time from less than 20 to over 80 per month.
+Interesting to observe is the positive impact of the initial period of the COVID-19 pandemic on the number of discussion papers published.
+The average number of JEL Codes per discussion paper on the other hand is rather stable over time, and fluctuates only mildly.
 
 \begin{figure}
     \centering
-    \includegraphics[width=0.8\textwidth]{../bld/figures/fig_counts_avg_jel_codes}
-    \caption{Discussion Papers \& Avg. JEL Codes per Paper Over Time}
-    \label{fig:monthly_counts_and_avg_jel_codes_per_paper}
+    \includegraphics{../bld/figures/fig_dp_counts}
+    \caption{Number of Discussion Papers \& JEL Codes per Discussion Paper}
+    \label{fig:dp_counts}
 \end{figure}
 
+Relevant to note is, that the structure of the authors publishing discussion papers has changed over time.
+The average number of authors per discussion paper per month has increased by about 0.5 authors per discussion paper.
+Furthermore, the average new number of new authors per discussion paper per month is stable around 0.5 authors per discussion paper, while the average number of authors that have published before is increasing by about 1.5 authors per discussion paper per month.
+This fact can be related to the establishment of the discussion series as a well-known platform for research in Labor Economics.
+These trends are shown in Figure \ref{fig:author_trends}.
+
 \begin{figure}
     \centering
-    \includegraphics[width=0.8\textwidth]{../bld/figures/fig_author_trends}
+    \includegraphics{../bld/figures/fig_author_trends}
     \caption{Average Number of Authors Over Time}
     \label{fig:author_trends}
 \end{figure}
 
-\begin{figure}
-    \centering
-    \includegraphics[width=0.8\textwidth]{../bld/figures/fig_dp_counts}
-    \caption{Number of Authors \& JEL Codes per Discussion Paper}
-    \label{fig:dp_counts}
-\end{figure}
-
-\begin{figure}
-    \centering
-    \includegraphics[width=0.8\textwidth]{../bld/figures/fig_top5overall_jel}
-    \caption{Top 5 JEL Codes}
-    \label{fig:top5overall_jel}
-\end{figure}
-
-\begin{figure}
-    \centering
-    \includegraphics[width=0.8\textwidth]{../bld/figures/fig_top3yearly_jel}
-    \caption{Top 3 JEL Codes yearly}
-    \label{fig:top3yearly_jel}
-\end{figure}
-
 \section{Methodology}
+The methodologies presented here are used to achieve two main objectives.
+First, the behavior of subfields over time is to be analyzed.
+Second, the text data methods, such as topic modeling using Latent Dirichlet Allocation (LDA), are used to validate the JEL Codes as a tool for analyzing specialization trends.
 
 \subsection{Topic Modeling}
 To analyze the specialization trends in economics research, topic modeling is used.
-Specifically, the Latent Dirichlet Allocation (LDA) algorithm is used to identify topics in the abstracts of the discussion papers \cite{blei2003}.
+Specifically, the LDA algorithm is used to identify topics in the abstracts of the discussion papers \cite{blei2003}.
 To prepare the abstract data for the LDA model, the text is lowercased, tokenized, and stemmed.
 Numbers, punctuation, and words containing no alphanumeric characters are removed.
 Furthermore, stopwords are removed from the text.
@@ -237,7 +228,36 @@ This topic modeling approach not only identifies prevalent themes but also captu
 It provides a robust foundation for analyzing specialization trends in economics research by revealing how topics cluster and evolve over time.
 The results from this robust methodology offer a comprehensive benchmark for understanding the dynamics of specialization within the field when using JEL codes.
 
+In Figure \ref{fig:top5_increasing_decreasing_topics}, the top 5 topics increasing and decreasing in presence are shown.
+
+
+\begin{figure}
+    \centering
+    \includegraphics{../bld/figures/fig_topic_trends}
+    \caption{Top 5 Topics Increasing (Left) and Decreasing (Right) in Presence}
+    \label{fig:top5_increasing_decreasing_topics}
+\end{figure}
+
 \subsection{JEL Code Analysis}
+
+\begin{figure}
+    \centering
+    \includegraphics{../bld/figures/fig_top5overall_jel}
+    \caption{Top 5 JEL Codes}
+    \label{fig:top5overall_jel}
+\end{figure}
+
+In the Figure \ref{fig:top3yearl_jel}, all JEL Codes are shown that are at least in one year among the top 3 JEL Codes.
+If the JEL Code is not among the top 3 JEL Codes in a year, the opacity of the line is reduced.
+The JEL Codes 'J24' (Human Capital, Skills, Occupational Choice, Labor Productivity) and 'J31' (Wage Level and Structure, Wage Differentials) are consistently among the top 3 JEL Codes.
+While other JEL Codes like 'J16' (Economics of Gender, Non-labor Discrimination) saw a relative frequency increase lately.
+
+\begin{figure}
+    \centering
+    \includegraphics{../bld/figures/fig_top3yearly_jel}
+    \caption{Top 3 JEL Codes yearly}
+    \label{fig:top3yearly_jel}
+\end{figure}
 
 \subsection{Overlapping Network Analysis}
 Initially, I wanted to use the Louvain algorithm to detect communities in the network.
@@ -247,12 +267,22 @@ Rather the combination of JEL codes describes a subfield.
 Subsets of JEL codes describing a subfield might overlap with JEL codes describing another subfields.
 Hence, the goal is to use a different algorithm to detect overlapping communities in the network.
 
-
-\clearpage
-
 \section{Conclusion}
 In a next step, the self-assigned keywords of the discussion papers can be used for comparison with the results from the topic modeling and JEL Code analysis.
 
 \printbibliography
+
+\section{Appendix}
+
+There are few authors that have published a large number of discussion papers.
+Similarly, there are few JEL Codes that are assigned to a large number of discussion papers.
+The Figure \ref{fig:counts_dp_jel_codes} shows the distribution of discussion papers by author on the left and by JEL Codes on the right.
+
+\begin{figure}
+    \centering
+    \includegraphics{../bld/figures/fig_counts_dp_jel_codes}
+    \caption{Discussion Papers by Author \& Discussion Papers by JEL Codes}
+    \label{fig:counts_dp_jel_codes}
+\end{figure}
 
 \end{document}
