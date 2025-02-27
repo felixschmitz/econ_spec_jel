@@ -9,12 +9,27 @@
 
 To work with the project, you should have [pixi](https://pixi.sh/latest/) installed.
 
+Then you can initialize the project with
+
+```console
+pixi install
+```
+
 ## Usage
+
+Make sure to have the file `bld/data/merged_data.pkl` stored in the directory
+`bld/data/` before running the code.
 
 To build the project, type
 
 ```console
-pixi run pytask
+pixi shell
+```
+
+and then
+
+```console
+pytask
 ```
 
 ## Credits
