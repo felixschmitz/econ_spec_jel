@@ -8,7 +8,6 @@ from gensim.corpora import Dictionary
 from gensim.models import LdaModel
 
 
-# @pytask.mark.skip()
 def task_gensim_dictionary(
     data: Annotated[Path, DATACATALOGS["data"]["analysis"]],
 ) -> Annotated[Path, DATACATALOGS["topic_model"]["dictionary"]]:
@@ -25,7 +24,6 @@ def task_gensim_dictionary(
     return _get_gensim_dictionary(data["abstract_tokenized"])
 
 
-# @pytask.mark.skip()
 def task_corpus(
     data: Annotated[Path, DATACATALOGS["data"]["analysis"]],
     gensim_dictionary: Annotated[Path, DATACATALOGS["topic_model"]["dictionary"]],
@@ -44,7 +42,6 @@ def task_corpus(
     return [gensim_dictionary.doc2bow(doc) for doc in data["abstract_tokenized"]]
 
 
-# @pytask.mark.skip()
 def task_train_topic_model(
     gensim_dictionary: Annotated[Path, DATACATALOGS["topic_model"]["dictionary"]],
     corpus: Annotated[Path, DATACATALOGS["topic_model"]["corpus"]],
