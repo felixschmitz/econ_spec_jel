@@ -16,9 +16,11 @@
 \usepackage[dvipsnames]{xcolor}
 \usepackage{subcaption}
 \usepackage{minibox}
-% \usepackage{pdf14} % Enable for Manuscriptcentral -- can't handle pdf 1.5
 % \usepackage{endfloat} % Enable to move tables / figures to the end. Useful for some
 % submissions.
+\usepackage[backend=bibtex, style=authoryear]{biblatex}
+
+\addbibresource{refs.bib}
 
 \usepackage[unicode=true]{hyperref}
 \hypersetup{
@@ -54,44 +56,102 @@ University of Bonn, Winter Term 2024/25}
 }
 
 \maketitle
-\footnotetext[1]{Email: \href{mailto:s87fschm@uni-bonn.de}{s87fschm@uni-bonn.de}}
-
-\begin{abstract}
-    Some abstract here.
-\end{abstract}
+\footnotetext[1]{Email: \href{mailto:s87fschm@uni-bonn.de}{s87fschm@uni-bonn.de}, Matriculation Number: 50173514}
 
 \clearpage
 
 \section{Introduction}
+This paper proposes research to investigates specialization trends within economics research, focusing on whether subfields are becoming more specialized over time.
+Understanding these trends is crucial as increasing specialization can influence knowledge dissemination, collaboration patterns, and the evolution of economic thought.
+
+To analyze specialization, a robust measure is required.
+The focus will be on leveraging Journal of Economic Literature (JEL) Codes, which are widely used by economists to classify research.
+These codes provide a structured way to categorize papers into subfields, allowing for a systematic analysis of specialization trends.
+The JEL Codes are assigned by authors or editors and are intended to reflect the main topics of a paper.
+While they do not cover the methods or data used in a paper, they provide a useful starting point for understanding the content of a paper, and hence of economic research in general.
+By examining the intersections of JEL Codes across papers, this study assesses the depth and diversity of specialization within economics research.
+
+This research also aims to validate the relevance of JEL Codes as a tool for analyzing specialization trends.
+Additionally, as an empirical application, the goal is to explores specialization dynamics within the field of Labor Economics, providing a focused example of how specialization may evolve over time.
+Through this approach, the study contributes to a better understanding of how economic research is structured and how subfields are connected or fragmented.
+The findings may have implications for how economists engage in interdisciplinary work and how academic communities organize knowledge.
+
+The following sections of this research proposal are structured as follows.
+First, the literature review provides an overview of the existing research on specialization trends in economics and the use of JEL Codes.
+Secondly, the data used for the analysis is described, including the data collection process and pre-processing steps.
+Descriptive statistics are then presented to provide an overview of the data.
+Next, the methodology is outlined, focusing on the use of topic modeling and network analysis to identify specialization trends.
+Finally, the conclusion summarizes the research objectives and the potential implications of the study.
+It also outlines the next steps for the analysis and the expected contributions of the research.
+
+\section{Literature Review}
+The literature on specialization trends in economics research is limited, with few studies focusing on the evolution of subfields within the discipline.
+However, there is a growing interest in understanding how knowledge is structured and how research communities are organized \cite{heikkila2022a}.
+investigates the use of JEL codes in economics research, and their development over time.
+The study finds that JEL codes are widely used to classify research in economics, and highlights the potential for "bibliometric and scientometric research" using these codes.
 
 \section{Data}
+For the sake of simplicity, the analysis of this paper are based on the IZA Discussion Paper Series.
+The working paper series is well established in the field of Labor Economics and was easily accessible via scraping.
+The series has been initialized in April 1998 and has been continuously published since then.
+The data includes the JEL Codes, the name of the authors, the abstract and the publication date of the discussion paper, among others.
 
-\subsection{Data Collection and Cleaning}
+For a future project, it would be interesting to extend the analysis to other working paper series or general economics journals.
+A dataset that might be easily available for analysis is a combination of Constellate, Semantic Scholar, and manually classified publications into subfields of economics research, as produced by \cite{galiani2023a}.
+This dataset would provide a more comprehensive view of specialization trends in economics research, and would allow to join the work with .
+
+\subsection{Data Collection}
+The data was scraped from the IZA website using the Python library \texttt{requests} and modules from the 'html-parser-library' \texttt{bs4.BeautifulSoup}.
+For each discussion paper, IZA has a webpage with metadata and a link to the PDF file.
+Both the metadata and the PDF file were downloaded and stored locally.
+The metadata for each discussion paper contains a title, a list of authors, the publication date (year and month), the list of assigned JEL Codes, a list of self-assigned keywords, and an abstract, among others.
+It was also possible to extract links provided for individual authors, which, if they exist, reference an IZA profile page with further information on the author, or a personal website.
+The PDF files were not used for the analysis so far.
+For this analysis, data has been collected up to February 2025 (discussion paper number 17695).
 
 There are 6 digits in the current range without a corresponding discussion paper accessible.
 The numbers are (4953, 12119, 12315, 12577, 12664, 16580).
 The first discussion paper would have been from May 2010.
 The later five ones fall into the time span January 2019 to November 2023.
+It is not possible to tell whether these discussion papers have been removed from the IZA website or whether they have never been published.
+
+\subsection{Data Pre-Processing}
+Initially, the metadata of the discussion papers was merged into a single dataset.
+This dataset was then cleaned and pre-processed to ensure consistency and quality for the analysis.
 
 There are 9 discussion paper entries without a corresponding discussion paper file accessible.
 The numbers are (9, 18, 21, 28, 33, 56, 173, 16801, 17143).
 The first nine fall into the range June 1998 to July 2000.
 The later two are from February and July 2024.
+These 15 entries (missing discussion paper or missing file) are excluded from the analysis.
 
-These 15 entries are excluded from the analysis.
+Variables were cleaned and efficient data types were chosen.
+Text information regarding publication was extracted from the metadata where possible.
+This information was then categorized into 'published', 'forthcoming', 'other\_publication\_information', 'superseded'.
+This categorization used text methods on Levenshtein distance, fuzzy search, and string matching, to identify typos in the publication information.
+The raw publication information was retained in a separate column.
+Information on superseded discussion papers was used, to exclude these from the analysis.
+This allowed to exclude discussion papers, which otherwise would have been counted twice in the analysis.
+The combination of text methods to identify superseded discussion papers was combined with the publication date of the discussion paper for this step.
+This led to dropping 18 entries.
 
-Dropped 18 entries, that have been superseded by another discussion paper.
-
-Dropped one discussion paper each with the JEL Codes "workfromhomecommutetimesallocationoftimesavingsCOVID19" (15870), and
-"labordisplacementenergytransitioncoalmines" (15581).
-Dropped 16 discussion papers due to completely missing JEL Codes, these were from March 2024 to February 2025.
+The JEL Codes were cleaned with high precision.
+Deviations from the expected format of alphanumeric characters, beginning with a capital letter and followed by two digits, were manually corrected.
 There were about 45 discussion papers that needed manual attention to fix the extracted JEL Codes.
-Likely the JEL Codes were extracted on IZA side via Optical Character Recognition (OCR) from the PDFs, leading to confusions of e.g. "I" and "1" or "O" and "0".
+In addition, the following algorithmic methods were used to clean the JEL Codes.
+The letters were converted to uppercase, leading '1' and '0' were replaced by 'I' and 'O', respectively.
+This confusion is likely due to the extraction of the JEL Codes via Optical Character Recognition (OCR) from the PDFs.
+After these thoroughly cleaning steps, JEL Codes not starting with a capital letter followed followed by at least one and at most two digits were dropped.
+Finally, JEL Codes with a single digit were converted to two digits by adding a trailing zero.
+Overall, one discussion paper each was dropped with the JEL Codes "workfromhomecommutetimesallocationoftimesavingsCOVID19" (15870), and
+"labordisplacementenergytransitioncoalmines" (15581).
+Further, 16 discussion papers were dropped due to completely missing JEL Codes. These were from March 2024 to February 2025.
 
-\subsection{Data Collection and Cleaning}
-For the analysis only data between January 2000 and December 2024 was selected.
+In a last step, the dataset was limited to discussion papers with an inclusive publication date between January 2000 and December 2024.
 This is mainly to ensure a sufficient number of observations per month (for the early years) and complete information on the discussion paper (for the most recent discussion papers).
 This reduces the sample size by 195 observations. The final number of discussion papers analysed is 17,449.
+
+\subsection{Descriptive Statistics}
 
 \begin{figure}
     \centering
@@ -114,6 +174,85 @@ This reduces the sample size by 195 observations. The final number of discussion
     \label{fig:dp_counts}
 \end{figure}
 
+\begin{figure}
+    \centering
+    \includegraphics[width=0.8\textwidth]{../bld/figures/fig_top5overall_jel}
+    \caption{Top 5 JEL Codes}
+    \label{fig:top5overall_jel}
+\end{figure}
+
+\begin{figure}
+    \centering
+    \includegraphics[width=0.8\textwidth]{../bld/figures/fig_top3yearly_jel}
+    \caption{Top 3 JEL Codes yearly}
+    \label{fig:top3yearly_jel}
+\end{figure}
+
+\section{Methodology}
+
+\subsection{Topic Modeling}
+To analyze the specialization trends in economics research, topic modeling is used.
+Specifically, the Latent Dirichlet Allocation (LDA) algorithm is used to identify topics in the abstracts of the discussion papers \cite{blei2003}.
+To prepare the abstract data for the LDA model, the text is lowercased, tokenized, and stemmed.
+Numbers, punctuation, and words containing no alphanumeric characters are removed.
+Furthermore, stopwords are removed from the text.
+The model
+The number of topics is set to 750 and 20 passes through the corpus of tokenized and stemmed abstracts are performed during training of the model, similar to \cite{galiani2023a}.
+
+\subsection{Topic Modeling}
+
+To analyze specialization trends in economics research, topic modeling is employed to identify latent topics within the abstracts of discussion papers.
+Specifically, the Latent Dirichlet Allocation (LDA) generative model is used, which assumes that documents discussing similar topics tend to use similar groups of words \cite{blei2003}.
+LDA is particularly suitable for this analysis as it captures co-occurring word clusters, revealing thematic structures within the corpus.
+This approach models documents as random mixtures over latent topics, where each topic is characterized by a distribution over words.
+
+To prepare the abstract data for the LDA model, several preprocessing steps are conducted to enhance the quality of the input text.
+First, all text is converted to lowercase.
+Tokenization is then performed, splitting the text into individual words.
+Stemming is applied to reduce words to their root form, capturing the core meaning of words (e.g., replacing "running" with "run").
+Additionally, numbers, punctuation, and tokens without alphanumeric characters are removed.
+Stopwords, which are common function words with little semantic value, are also eliminated.
+These preprocessing steps collectively improve the quality of the tokenized text, ensuring a more effective training process for the LDA model.
+
+The LDA model is trained using \texttt{Gensim}'s implementation of the LDA training algorithm
+%\cite{rehurek2010}.
+The number of topics is set to 750, and the model is trained using 20 passes through the corpus.
+These settings are chosen to ensure sufficient topic granularity while maintaining interpretability, similar to the approach used in \cite{galiani2023a}.
+
+% is this true?
+The model uses a symmetric Dirichlet prior for the topic distribution per document ($\alpha$) and the word distribution per topic ($\eta$), reflecting the assumption that all topics and words are equally likely a priori.
+
+Two main outputs are obtained from the trained LDA model. First, the word distribution over topics, denoted as $w_{k,l}$, represents the probability of word $l$ in topic $k$, with $\sum_l w_{k,l} = 1$.
+This indicates the contribution of each word to the topic.
+Second, the topic distribution over documents, denoted as $t_{i,k}$, captures the presence of topic $k$ in document $i$, with $\sum_k t_{i,k} = 1$.
+This shows the relevance of each topic within the document.
+
+To ensure the meaningfulness of the detected topics, a filtering process is applied.
+Topics predominantly composed of non-thematic words (e.g., "online", "access", "appendix") or those lacking a clear thematic pattern are excluded.
+% After this filtering process, 695 meaningful topics are retained.
+An article $i$ is defined as "containing" topic $k$ if $t_{i,k}$ ranks among the top ten topics with the highest presence in that article.
+This approach ensures consistent topic assignment while maintaining interpretability.
+
+This topic modeling approach not only identifies prevalent themes but also captures the interconnectedness of topics within the field.
+It provides a robust foundation for analyzing specialization trends in economics research by revealing how topics cluster and evolve over time.
+The results from this robust methodology offer a comprehensive benchmark for understanding the dynamics of specialization within the field when using JEL codes.
+
+\subsection{JEL Code Analysis}
+
+\subsection{Overlapping Network Analysis}
+Initially, I wanted to use the Louvain algorithm to detect communities in the network.
+However, the algorithm only allows to non-overlapping communities, that is, a node can only belong to one community.
+This is not suitable for the analysis of specialization trends in economics research, as a JEL code can belong to multiple subfields.
+Rather the combination of JEL codes describes a subfield.
+Subsets of JEL codes describing a subfield might overlap with JEL codes describing another subfields.
+Hence, the goal is to use a different algorithm to detect overlapping communities in the network.
+
+
 \clearpage
+
+\section{Conclusion}
+In a next step, the self-assigned keywords of the discussion papers can be used for comparison with the results from the topic modeling and JEL Code analysis.
+
+\printbibliography
 
 \end{document}
