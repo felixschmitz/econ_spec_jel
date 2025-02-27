@@ -4,6 +4,7 @@ from pathlib import Path
 from typing import Annotated, Any
 
 import requests
+import pytask
 from pytask import task
 
 from econ_spec_jel.config import DATACATALOGS, MAX_DP_NUMBER
@@ -22,6 +23,7 @@ for dp_number in range(1, MAX_DP_NUMBER + 1):
     if _metadata_has_not_been_scraped(dp_number=dp_number):
 
         @task(id=f"{dp_number}")
+        @pytask.mark.skip()
         def task_scrape_metadata(
             dp_number: int = dp_number,
         ) -> Annotated[Path, DATACATALOGS["raw"]["metadata"][f"{dp_number}"]]:
@@ -39,6 +41,7 @@ for dp_number in range(1, MAX_DP_NUMBER + 1):
     if _file_has_not_been_downloaded(dp_number=dp_number):
 
         @task(id=f"{dp_number}", after=f"task_scrape_metadata[{dp_number}]")
+        @pytask.mark.skip()
         def task_download_file(
             dp_number: int = dp_number,
         ) -> Annotated[Path, DATACATALOGS["raw"]["files"][f"{dp_number}"]]:

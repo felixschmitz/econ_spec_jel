@@ -168,3 +168,4 @@ convention = "numpy"
 addopts = ["--doctest-modules"]
 testpaths = ["src", "tests"]
 norecursedirs = [".idea", ".tox"]
+infer_latex_dependencies = true
