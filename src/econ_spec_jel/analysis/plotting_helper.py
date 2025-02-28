@@ -276,6 +276,16 @@ def plot_most_common_jel_codes(
         number_of_codes (int): The number of most common JEL codes to plot.
     """
     most_common_codes = _get_most_common_codes(data=data, number=number_of_codes)
+
+    # Choose a color palette from Plotly
+    color_palette = px.colors.qualitative.Plotly
+    # Extend the palette if there are more codes than colors in the palette
+    extended_palette = (
+        color_palette * ((len(most_common_codes) // len(color_palette)) + 1)
+    )[: len(most_common_codes)]
+    # Map each JEL code to a unique color
+    color_mapping = dict(zip(most_common_codes, extended_palette, strict=False))
+
     fig = go.Figure()
 
     total_counts = (
@@ -295,25 +305,32 @@ def plot_most_common_jel_codes(
         )
 
         smooth_indices = jel_counts.index[::6]
+
+        # Use consistent color for all traces related to this JEL code
+        color = color_mapping[code]
+
+        # Monthly trace
         fig.add_trace(
             go.Scatter(
                 x=jel_counts["publication_year_month"],
                 y=jel_counts[f"{code}_normalized"],
                 mode="lines",
                 name=f"{code} (monthly)",
-                line={"width": 1, "dash": "dot"},
+                line={"color": color, "width": 1, "dash": "dot"},
                 opacity=0.3,
             )
         )
+        # 6-month average trace
         fig.add_trace(
             go.Scatter(
                 x=jel_counts.loc[smooth_indices, "publication_year_month"],
                 y=jel_counts.loc[smooth_indices, f"{code}_normalized_smooth"],
                 mode="lines+markers",
                 name=f"{code} (6-month avg.)",
-                line={"width": 2},
+                line={"color": color, "width": 2},
             )
         )
+
     fig.update_layout(
         template="plotly_white",
         xaxis={

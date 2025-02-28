@@ -50,7 +50,7 @@ def _plot_topic_trends(
         ],
         shared_xaxes="columns",
         shared_yaxes="all",
-        vertical_spacing=0.01,
+        vertical_spacing=0.05,
         horizontal_spacing=0.05,
     )
 
@@ -99,8 +99,8 @@ def _plot_topic_trends(
 
     fig.update_layout(
         template="plotly_white",
-        width=1500,
-        height=1200,
+        width=1200,
+        height=900,
         showlegend=False,
     )
     fig.update_xaxes(tickformat="%Y")
