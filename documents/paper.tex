@@ -18,7 +18,7 @@
 \usepackage{minibox}
 % \usepackage{endfloat} % Enable to move tables / figures to the end. Useful for some
 % submissions.
-\usepackage[backend=bibtex, style=authoryear]{biblatex}
+\usepackage[backend=bibtex, style=authoryear, natbib]{biblatex}
 
 \addbibresource{refs.bib}
 
@@ -56,26 +56,26 @@ University of Bonn, Winter Term 2024/25}
 }
 
 \maketitle
-\footnotetext[1]{Email: \href{mailto:s87fschm@uni-bonn.de}{s87fschm@uni-bonn.de}, Matriculation Number: 50173514}
+\footnotetext[1]{Email: \href{mailto:s87fschm@uni-bonn.de}{s87fschm@uni-bonn.de}, Matriculation Number: 50173514, For replication material see \href{https://github.com/felixschmitz/econ_spec_jel}{here}}
 
 \section{Introduction}
-This paper proposes research to investigates specialization trends within economics research, focusing on whether subfields are becoming more specialized over time.
+This paper proposes research to investigate specialization trends within economics research, focusing on whether subfields are becoming more specialized over time.
 Understanding these trends is crucial as increasing specialization can influence knowledge dissemination, collaboration patterns, and the evolution of economic thought.
 
 To analyze specialization, a robust measure is required.
 The focus will be on leveraging Journal of Economic Literature (JEL) Codes, which are widely used by economists to classify research.
 These codes provide a structured way to categorize papers into subfields, allowing for a systematic analysis of specialization trends.
 The JEL Codes are assigned by authors or editors and are intended to reflect the main topics of a paper.
-While they do not cover the methods or data used in a paper, they provide a useful starting point for understanding the content of a paper, and hence of economic research in general.
+While they do not cover the methods or data used in a paper, they provide a useful starting point for understanding the content of a paper, and hence of economic research in aggregate.
 By examining the intersections of JEL Codes across papers, this study assesses the depth and diversity of specialization within economics research.
 
 This research also aims to validate the relevance of JEL Codes as a tool for analyzing specialization trends.
-Additionally, as an empirical application, the goal is to explores specialization dynamics within the field of Labor Economics, providing a focused example of how specialization may evolve over time.
-Through this approach, the study contributes to a better understanding of how economic research is structured and how subfields are connected or fragmented.
+Additionally, as an empirical application, the goal is to explore specialization dynamics within the subfield of Labor Economics, providing a focused example of how specialization may evolve over time.
+Through this approach, the study contributes to a better understanding of how economic research is structured and how subfields are connected or fragmented (e.g. \citep{davis2019}).
 The findings may have implications for how economists engage in interdisciplinary work and how academic communities organize knowledge.
 
 The following sections of this research proposal are structured as follows.
-First, the literature review provides an overview of the existing research on specialization trends in economics and the use of JEL Codes.
+First, the literature review provides a brief overview of the existing research on specialization trends in economics and the use of JEL Codes.
 Secondly, the data used for the analysis is described, including the data collection process and pre-processing steps.
 Descriptive statistics are then presented to provide an overview of the data.
 Next, the methodology is outlined, focusing on the use of topic modeling and network analysis to identify specialization trends.
@@ -84,9 +84,25 @@ It also outlines the next steps for the analysis and the expected contributions 
 
 \section{Literature Review}
 The literature on specialization trends in economics research is limited, with few studies focusing on the evolution of subfields within the discipline.
-However, there is a growing interest in understanding how knowledge is structured and how research communities are organized \cite{heikkila2022a}.
-investigates the use of JEL codes in economics research, and their development over time.
+\citet{onder2021} analyze the specialization trends of authors and co-authors in economics research, and the resulting impact on research output.
+They find that eventhough specialization of authors is increasing, the publication by them into highly ranked journals is decreasing.
+Recent advances in text data analysis have opened up new possibilities for studying specialization trends \citep{anauati2016, angrist2017, angrist2020, galiani2023a}.
+These facilitate natural language processing techniques to assign specific field of economics research tags.
+The analysis then is based upon these tags to identify specialization trends on the distinction of theoretical vs. empirical developments.
+The tags not only contain information on the topics covered, but also the approach and methods used in the research.
+\citet{heikkila2022a} investigates the use of JEL codes in economics research, and their development over time.
 The study finds that JEL codes are widely used to classify research in economics, and highlights the potential for "bibliometric and scientometric research" using these codes.
+In addition, the research shows that classification scheme of JEL Codes remained basically unchanged since a large revision in 1991.
+There is further research on the classification of research papers in economics between human and machine classification \citep{heikkila2024}.
+Generating (artificial) JEL Codes from abstracts using large language models is the focus here.
+There is relevant research on the trends of JEL Codes used in economics research \citep{kelly2011}.
+The authors analyze the publication by subfields, the development of JEL Codes, and define specialty journals using JEL codes.
+\citet{rath2016} extend this research focusing on the distribution of JEL Codes in economics research per subfield.
+Further, there is a growing interest in understanding how knowledge is structured and how research communities are organized.
+
+This research paper aims to contribute to the existing literature by validating the use of JEL Codes as a tool for analyzing specialization trends in economics research.
+In addition, the study will add a different perspective through the use of JEL Codes instead of predicted fields of economics research tags, and allow for a perspective on how authors themselves classify their research.
+To be more precise, the self-classification of JEL Codes and the subsequent dynamics might differ from the classification based upon text data based methods.
 
 \section{Data}
 For the sake of simplicity, the analysis of this paper are based on the IZA Discussion Paper Series.
@@ -100,18 +116,18 @@ This dataset would provide a more comprehensive view of specialization trends in
 
 \subsection{Data Collection}
 The data was scraped from the IZA website using the Python library \texttt{requests} and modules from the 'html-parser-library' \texttt{bs4.BeautifulSoup}.
-For each discussion paper, IZA has a webpage with metadata and a link to the PDF file.
-Both the metadata and the PDF file were downloaded and stored locally.
-The metadata for each discussion paper contains a title, a list of authors, the publication date (year and month), the list of assigned JEL Codes, a list of self-assigned keywords, and an abstract, among others.
+For each discussion paper, IZA has a webpage with metadata and a link to the discussion paper file.
+Both the metadata and the file were downloaded and stored locally.
+The metadata for each discussion paper contains a title, a list of authors, the publication date (year and month), the list of assigned JEL Codes, a list of assigned keywords, and an abstract, among others.
 It was also possible to extract links provided for individual authors, which, if they exist, reference an IZA profile page with further information on the author, or a personal website.
-The PDF files were not used for the analysis so far.
+The files and keywords were not used for the analysis so far.
 For this analysis, data has been collected up to February 2025 (discussion paper number 17695).
 
 There are 6 digits in the current range without a corresponding discussion paper accessible.
 The numbers are (4953, 12119, 12315, 12577, 12664, 16580).
 The first discussion paper would have been from May 2010.
 The later five ones fall into the time span January 2019 to November 2023.
-It is not possible to tell whether these discussion papers have been removed from the IZA website or whether they have never been published.
+It is not possible to tell why and when these discussion papers have been removed by IZA.
 
 \subsection{Data Pre-Processing}
 Initially, the metadata of the discussion papers was merged into a single dataset.
@@ -161,19 +177,6 @@ The average number of JEL Codes per discussion paper on the other hand is rather
     \includegraphics[width=\textwidth]{../bld/figures/fig_dp_counts}
     \caption{Number of Discussion Papers \& JEL Codes per Discussion Paper}
     \label{fig:dp_counts}
-\end{figure}
-
-Relevant to note is, that the structure of the authors publishing discussion papers has changed over time.
-The average number of authors per discussion paper per month has increased by about 0.5 authors per discussion paper.
-Furthermore, the average new number of new authors per discussion paper per month is stable around 0.5 authors per discussion paper, while the average number of authors that have published before is increasing by about 1.5 authors per discussion paper per month.
-This fact can be related to the establishment of the discussion series as a well-known platform for research in Labor Economics.
-These trends are shown in Figure \ref{fig:author_trends}.
-
-\begin{figure}
-    \centering
-    \includegraphics[width=\textwidth]{../bld/figures/fig_author_trends}
-    \caption{Average Number of Authors Over Time}
-    \label{fig:author_trends}
 \end{figure}
 
 \section{Methodology}
@@ -247,18 +250,6 @@ In Figure \ref{fig:top5_increasing_decreasing_topics}, the top 5 topics increasi
     \label{fig:top5overall_jel}
 \end{figure}
 
-In the Figure \ref{fig:top3yearl_jel}, all JEL Codes are shown that are at least in one year among the top 3 JEL Codes.
-If the JEL Code is not among the top 3 JEL Codes in a year, the opacity of the line is reduced.
-The JEL Codes 'J24' (Human Capital, Skills, Occupational Choice, Labor Productivity) and 'J31' (Wage Level and Structure, Wage Differentials) are consistently among the top 3 JEL Codes.
-While other JEL Codes like 'J16' (Economics of Gender, Non-labor Discrimination) saw a relative frequency increase lately.
-
-\begin{figure}
-    \centering
-    \includegraphics[width=\textwidth]{../bld/figures/fig_top3yearly_jel}
-    \caption{Top 3 JEL Codes yearly}
-    \label{fig:top3yearly_jel}
-\end{figure}
-
 \subsection{Overlapping Network Analysis}
 Initially, I wanted to use the Louvain algorithm to detect communities in the network.
 However, the algorithm only allows to non-overlapping communities, that is, a node can only belong to one community.
@@ -269,8 +260,13 @@ Hence, the goal is to use a different algorithm to detect overlapping communitie
 
 \section{Conclusion}
 In a next step, the self-assigned keywords of the discussion papers can be used for comparison with the results from the topic modeling and JEL Code analysis.
+Further, the content of the files can be used to create artificial JEL Codes as in \citet{heikkila2024} or to create fields of economics research tags as shown by \citet{anauati2016, galiani2023a}.
+Leveraging the data from \citet{anauati2016, galiani2023a} would also allow to expand the analysis into other subfields of economics research, and to combine the JEL Code analysis with citation data.
+This would allow to understand how specialization trends in economics research are related to citation patterns and the dissemination of knowledge for specific topics.
 
 \printbibliography
+
+\clearpage
 
 \section{Appendix}
 
@@ -283,6 +279,31 @@ The Figure \ref{fig:counts_dp_jel_codes} shows the distribution of discussion pa
     \includegraphics[width=\textwidth]{../bld/figures/fig_counts_dp_jel_codes}
     \caption{Discussion Papers by Author \& Discussion Papers by JEL Codes}
     \label{fig:counts_dp_jel_codes}
+\end{figure}
+
+Relevant to note is, that the structure of the authors publishing discussion papers has changed over time.
+The average number of authors per discussion paper per month has increased by about 0.5 authors per discussion paper.
+Furthermore, the average new number of new authors per discussion paper per month is stable around 0.5 authors per discussion paper, while the average number of authors that have published before is increasing by about 1.5 authors per discussion paper per month.
+This fact can be related to the establishment of the discussion series as a well-known platform for research in Labor Economics.
+These trends are shown in Figure \ref{fig:author_trends}.
+
+\begin{figure}
+    \centering
+    \includegraphics[width=\textwidth]{../bld/figures/fig_author_trends}
+    \caption{Average Number of Authors Over Time}
+    \label{fig:author_trends}
+\end{figure}
+
+In Figure \ref{fig:top3yearl_jel}, all JEL Codes are shown that are at least in one year among the top 3 JEL Codes.
+If the JEL Code is not among the top 3 JEL Codes for a specific year in the plot, the opacity of the line is reduced.
+The JEL Codes 'J24' (Human Capital, Skills, Occupational Choice, Labor Productivity) and 'J31' (Wage Level and Structure, Wage Differentials) are consistently among the top 3 JEL Codes.
+While other JEL Codes like 'J16' (Economics of Gender, Non-labor Discrimination) saw a relative frequency increase lately.
+
+\begin{figure}
+    \centering
+    \includegraphics[width=\textwidth]{../bld/figures/fig_top3yearly_jel}
+    \caption{Top 3 JEL Codes yearly}
+    \label{fig:top3yearly_jel}
 \end{figure}
 
 \end{document}
